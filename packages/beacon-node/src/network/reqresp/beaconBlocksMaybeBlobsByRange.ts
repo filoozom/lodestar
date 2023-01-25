@@ -15,8 +15,15 @@ export async function beaconBlocksMaybeBlobsByRange(
   request: phase0.BeaconBlocksByRangeRequest,
   currentEpoch: Epoch
 ): Promise<BlockInput[]> {
-  // TODO EIP-4844: Assumes all blocks in the same epoch
-  // TODO EIP-4844: Ensure all blocks are in the same epoch
+  // Code below assumes the request is in the same epoch
+  // Range sync satisfies this condition, but double check here for sanity
+  const startEpoch = computeEpochAtSlot(request.startSlot);
+  const endEpoch = computeEpochAtSlot(request.startSlot + request.count);
+  if (startEpoch !== endEpoch) {
+    throw Error(`BeaconBlocksByRangeRequest must be in the same epoch ${startEpoch} != ${endEpoch}`);
+  }
+
+  // Note: Assumes all blocks in the same epoch
   if (config.getForkSeq(request.startSlot) < ForkSeq.eip4844) {
     const blocks = await reqResp.beaconBlocksByRange(peerId, request);
     return blocks.map((block) => getBlockInput.preEIP4844(config, block));
