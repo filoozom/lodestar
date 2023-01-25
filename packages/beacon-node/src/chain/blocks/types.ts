@@ -7,13 +7,11 @@ import {IChainForkConfig} from "@lodestar/config";
 export enum BlockInputType {
   preEIP4844 = "preEIP4844",
   postEIP4844 = "postEIP4844",
-  postEIP4844OldBlobs = "postEIP4844OldBlobs",
 }
 
 export type BlockInput =
   | {type: BlockInputType.preEIP4844; block: allForks.SignedBeaconBlock}
-  | {type: BlockInputType.postEIP4844; block: allForks.SignedBeaconBlock; blobs: eip4844.BlobsSidecar}
-  | {type: BlockInputType.postEIP4844OldBlobs; block: allForks.SignedBeaconBlock};
+  | {type: BlockInputType.postEIP4844; block: allForks.SignedBeaconBlock; blobs: eip4844.BlobsSidecar};
 
 export function blockRequiresBlobs(config: IChainForkConfig, blockSlot: Slot, clockSlot: Slot): boolean {
   return (
@@ -42,16 +40,6 @@ export const getBlockInput = {
       type: BlockInputType.postEIP4844,
       block,
       blobs,
-    };
-  },
-
-  postEIP4844OldBlobs(config: IChainForkConfig, block: allForks.SignedBeaconBlock): BlockInput {
-    if (config.getForkSeq(block.message.slot) < ForkSeq.eip4844) {
-      throw Error(`Pre EIP4844 block slot ${block.message.slot}`);
-    }
-    return {
-      type: BlockInputType.postEIP4844OldBlobs,
-      block,
     };
   },
 };

@@ -20,6 +20,7 @@ import {defaultChainOptions} from "../../../src/chain/options.js";
 import {getStubbedBeaconDb} from "../../utils/mocks/db.js";
 import {ClockStopped} from "../../utils/mocks/clock.js";
 import {getBlockInput, AttestationImportOpt} from "../../../src/chain/blocks/types.js";
+import {getEmptyBlobsSidecar} from "../../../src/util/blobs.js";
 import {ZERO_HASH_HEX} from "../../../src/constants/constants.js";
 import {PowMergeBlock} from "../../../src/eth1/interface.js";
 import {assertCorrectProgressiveBalances} from "../config.js";
@@ -152,7 +153,7 @@ export const forkChoiceTest = (opts: {onlyPredefinedResponses: boolean}): TestRu
             const blockImport =
               config.getForkSeq(slot) < ForkSeq.eip4844
                 ? getBlockInput.preEIP4844(config, signedBlock)
-                : getBlockInput.postEIP4844OldBlobs(config, signedBlock);
+                : getBlockInput.postEIP4844(config, signedBlock, getEmptyBlobsSidecar(config, signedBlock));
 
             try {
               await chain.processBlock(blockImport, {

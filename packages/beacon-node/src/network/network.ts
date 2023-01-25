@@ -220,9 +220,6 @@ export class Network implements INetwork {
           beaconBlock: blockInput.block as eip4844.SignedBeaconBlock,
           blobsSidecar: blockInput.blobs,
         });
-
-      case BlockInputType.postEIP4844OldBlobs:
-        throw Error(`Attempting to broadcast old BlockInput slot ${blockInput.block.message.slot}`);
     }
   }
 

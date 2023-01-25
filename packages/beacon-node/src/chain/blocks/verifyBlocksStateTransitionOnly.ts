@@ -128,9 +128,5 @@ function maybeValidateBlobs(
 
     case BlockInputType.preEIP4844:
       return DataAvailableStatus.preEIP4844;
-
-    // TODO: Ok to assume old data available?
-    case BlockInputType.postEIP4844OldBlobs:
-      return DataAvailableStatus.available;
   }
 }
