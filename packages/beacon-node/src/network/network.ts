@@ -13,6 +13,7 @@ import {ChainEvent, IBeaconChain, IBeaconClock} from "../chain/index.js";
 import {BlockInput, BlockInputType} from "../chain/blocks/types.js";
 import {INetworkOptions} from "./options.js";
 import {INetwork, Libp2p} from "./interface.js";
+import {ReqRespBeaconNode, ReqRespHandlers, beaconBlocksMaybeBlobsByRange} from "./reqresp/index.js";
 import {beaconBlocksMaybeBlobsByRoot} from "./reqresp/beaconBlocksMaybeBlobsByRoot.js";
 import {
   Eth2Gossipsub,
@@ -227,7 +228,7 @@ export class Network implements INetwork {
     peerId: PeerId,
     request: phase0.BeaconBlocksByRangeRequest
   ): Promise<BlockInput[]> {
-    return doBeaconBlocksMaybeBlobsByRange(this.config, this.reqResp, peerId, request, this.clock.currentEpoch);
+    return beaconBlocksMaybeBlobsByRange(this.config, this.reqResp, peerId, request, this.clock.currentEpoch);
   }
 
   async beaconBlocksMaybeBlobsByRoot(peerId: PeerId, request: phase0.BeaconBlocksByRootRequest): Promise<BlockInput[]> {
